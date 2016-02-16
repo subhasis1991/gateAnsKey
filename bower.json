@@ -1,0 +1,22 @@
+{
+  "name": "gateAnsKey",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Subhasis Maity <iam.sm.work@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/subhasis1991/gateAnsKey",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "handlebars": "^4.0.5"
+  }
+}

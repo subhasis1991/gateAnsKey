@@ -1,0 +1,175 @@
+jQuery(document).ready(function($) {
+    var progressBar = $('.bar1'),
+        progressBarWrapper = progressBar.parent(),
+        formContainer = $('.form-container')
+        jumbotron = $('.jumbotron'),
+        submit = $('#submit'),
+        answer = $('.answer'),
+        container = $('.container'),
+        loading = $('.loading'),
+        attempted = $('.attempted span'),
+        right = $('.right span'),
+        total = $('.total span'),
+        wrong = $('.wrong span'),
+        userName = $('.name span'),
+        rollno = $('.rollno span'),
+        testDate = $('.test-date span'),
+        subject = $('.subject span')
+        h4 = $('h4');
+        h4.hide();
+        
+
+    submit.click(function(event) {
+        event.preventDefault();
+        var fileData = $( 'input[type=file' )[0].files[0];
+        console.log(fileData);
+        // var stream = $( 'input[type=file' )[0].files[0]
+
+        if (!fileData) {
+           h4.fadeIn(1000, function() {
+            setTimeout(function(){
+                h4.fadeOut(800);
+            }, 1800)
+                
+            });
+            return
+        }
+        //check if proper html file is uploaded
+        if (fileData.type !== 'text/html') {
+            console.error('Please select Html File.');
+            alert('Please select Html File.');
+            return;
+        }
+
+        //verify data
+        setTimeout(function(){
+            loading.removeClass('hidden');
+            loading.hide();
+            loading.fadeIn('fast')
+        },1000);
+
+        var fd = new FormData();
+        fd.append('ansFile', fileData);
+        // fd.append('ansFile', fileData);
+
+        $.ajax({
+            url: 'file/upload',
+            data: fd,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            xhr: function() {
+                var xhr = new window.XMLHttpRequest();
+
+                xhr.upload.addEventListener("progress", function(evt) {
+                  if (evt.lengthComputable) {
+                    var percentComplete = evt.loaded / evt.total;
+                    percentComplete = parseInt(percentComplete * 100);
+                    
+                    // show progress
+                    progressBar.width(percentComplete + '%');
+
+                  }
+                }, false);
+
+                return xhr;
+            },
+            success: function ( data ) {
+                if (!data.err) {
+                    formContainer.addClass('hide');
+                    formContainer.animate({
+                        opacity: 0,
+                        visibility: 'hidden'
+                    },
+                    1000, function() {
+                        // container.addClass('hide');
+                        container.hide();
+                        formContainer.detach();
+                        jumbotron.removeClass('hide');
+                        loading.addClass('hide');
+
+
+
+                        //extract user
+                        var user = $(data.userInfo);
+                        var userData = User(user);
+
+                        userName.text(userData['name']);
+                        rollno.text(userData['rollno']);
+                        testDate.text(userData['date']);
+                        subject.text(userData['subject']);
+
+
+                        //attatch data to dom
+                        $.each(data.arr, function(index, el) {
+                            answer.append(creatQuestion(el, index));
+                        });        
+                        //set the jumbo data
+                        $(attempted[0]).text(data['qcount'] - data['nonAttempt']);
+                        $(attempted[2]).text(data['qcount']);
+                        right.text(data['right']);
+                        total.text(data['credit']);
+                        wrong.text(data['wrong']);
+                        container.fadeIn('slow', function() {
+                            
+                        });
+                    });
+                }else{
+                    console.error(data.err, data.errCode);
+                    loading.addClass('hide');
+                    //show error msg to user
+                    alert('Please select proper file');
+                }
+
+                    
+            }//end success
+
+        });//end $.ajax
+
+        //show progress bar
+        progressBarWrapper.removeClass('hidden');
+
+
+    });//end click
+
+
+});                 
+
+function creatQuestion(obj, id){
+    var str = '';
+    str = '<div class="col-6-md question">';
+    if ((parseInt(id.toString().slice(-2)) > 90) || (id.toString().slice(-2) == '00')) {
+        str+=       '<img class="question-img" name="585_664592_0_587434_cs2_q'+id.toString().slice(-2)+'.jpg" src="https://www.digialm.com:443//per/g01/pub/585/touchstone/TempQPImagesStoreNonSecured/adcimages/1454917673108/6645927///585_664592_0_587434_ga6_q0'+ id.toString().slice(-1) +'.jpg" alt="">';
+    }else{
+        str+=       '<img class="question-img" name="585_664592_0_587434_cs2_q'+id.toString().slice(-2)+'.jpg" src="https://www.digialm.com:443//per/g01/pub/585/touchstone/TempQPImagesStoreNonSecured/adcimages/1454917673108/6645927///585_664592_0_587434_cs2_q'+ id.toString().slice(-2) +'.jpg" alt="">';
+    }
+    str+=        '<div class="wrapper">';
+    str+=            '<ul>';
+    str+=               ' <li>QID : <strong>' + id +'</strong> </li>';
+    str+=               '<li class="correct">Correct answer : <strong>'+ obj['answer'] +'</strong></li>';
+    if (obj['type'] === '1') {
+        str+=           '<li>Your answer (Selected) : '+ obj['ChosenOption']+'</li>';
+    }else if (obj['type'] === '2') {
+        str+=           '<li>Your answer (Given) : '+ obj['GivenAnswer'] +'</li>';
+    }
+    str+=            '</ul>';
+    str+=        '</div>';
+    str+=    '</div>';
+
+    return $(str);
+}
+
+function User(user){
+    var nameData = user[0];
+    var dateData = user[4];
+    var rollData = user[2];
+    var subjectData = user[6];
+    var ret = {};
+
+    ret['name'] = $($(nameData).find('td')[1]).text().trim();
+    ret['date'] = $($(dateData).find('td')[1]).text().trim();
+    ret['rollno'] = $($(rollData).find('td')[1]).text().trim();
+    ret['subject'] = $($(subjectData).find('td')[1]).text().trim();
+
+    return ret;
+}

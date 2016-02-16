@@ -1,0 +1,1 @@
+mongod --dbpath C:\\#PORTABLES\\mongodb-win32-x86_64-2.4.6\\data\\db
