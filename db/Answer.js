@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var Answer = new mongoose.Schema({
+module.exports = Answer = new mongoose.Schema({
     id:       { type: Number },
     answer:   { type: String },
     type:     { type: String},

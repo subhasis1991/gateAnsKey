@@ -58,7 +58,9 @@ router.post('/upload', function(req, res, next) {
 
       });
     }else{
+      //error coming
       res.send({err: 1, msg: 'Please Upload html file only', errCode: 0})  ;
+      console.log('-------------------------------------------------------');
       res.end();
     }//end if
   });
@@ -72,9 +74,12 @@ router.post('/upload', function(req, res, next) {
         if (!err && stats.isFile()) {
           //start processing the anser page
           digester(filePath, function(err, digested){
+
           // console.log(digested.data);
           //compare and generate result
+          console.log(digested.data);
           Answer.find({stream:'cs', qSet: '1'}).exec(function(err, docs){
+            // console.log(docs);
             _.each(docs, function(doc, index){
               var id,
                   ans,
@@ -90,64 +95,74 @@ router.post('/upload', function(req, res, next) {
                 && digested.hasOwnProperty('userInfo') 
                 && digested['userInfo']
                 )) {
+                //use seHeader instead for error handling
                 res.send({err:1, msg: 'question not found in database'});
                 res.end();
               }else{
                 userInfo = digested.userInfo;
                 digestIt = digested.data[id];
-                  
-                //match answer
-                if (digestIt['ChosenOption'] && (digestIt['ChosenOption']!= '--')) {
-                  
-                  response = digestIt['ChosenOption'];
-                  responseType = 1;
-                }else if (digestIt['GivenAnswer'] && (digestIt['GivenAnswer']!= '--')) {
-                  
-                  response = digestIt['GivenAnswer'];
-                  responseType = 2;
-                }else if ((digestIt['GivenAnswer'] === '--') || (digestIt['ChosenOption'] === '--')) {
-                  // console.log('++++++++++++++++++++');
-                  responseType = 0
-                }else {
-                  //err
-                  // console.log('~~~~~~~~~~~~~~~~~~~');
-                  res.send({err: 1, msg: 'wrong data found'});
-                }
+                
+                if (digestIt) {
+                  //match answer
+                  if (digestIt['ChosenOption'] && (digestIt['ChosenOption']!= '--')) {
+                    
+                    response = digestIt['ChosenOption'];
+                    responseType = 1;
+                  }else if (digestIt['GivenAnswer'] && (digestIt['GivenAnswer']!= '--')) {
+                    
+                    response = digestIt['GivenAnswer'];
+                    responseType = 2;
+                  }else if ((digestIt['GivenAnswer'] === '--') || (digestIt['ChosenOption'] === '--')) {
+                    // console.log('++++++++++++++++++++');
+                    responseType = 0
+                  }else {
+                    //err
+                    // console.log('~~~~~~~~~~~~~~~~~~~');
+                    res.send({err: 1, msg: 'wrong data found'});
+                  }
 
-                if(!responseType){
-                  // console.log('000000000000000000000');
-                  //not attempted
-                  nonAttempt++;
-                  digestIt['status'] = 0;
-                }else if ((responseType == type) && (response == ans)) {
-                  //correct answer
-                  digestIt['status'] = 1;
-                  right++;
-                  credit += doc['credit'];
-                  // console.log('>>>>>>>>>>>>>>>>>>>>>');
-                }else{
-                  // console.log('<<<<<<<<<<<<<<<<<<<<');
-                  // wrong answer
-                  wrong++;
-                  digestIt['status'] = -1;
-                  if (responseType === 1) {
-                    //negative marking
-                    if (doc['credit']) {
-                      credit -= doc['credit'] * (1/3);
-                    }
+                  if(!responseType){
+                    // console.log('000000000000000000000');
+                    //not attempted
+                    nonAttempt++;
+                    digestIt['status'] = 0;
+                  }else if ((responseType == type) && (response == ans)) {
+                    //correct answer
+                    digestIt['status'] = 1;
+                    right++;
+                    credit += doc['credit'];
+                    // console.log('>>>>>>>>>>>>>>>>>>>>>');
                   }else{
-                    //ok
+                    // console.log('<<<<<<<<<<<<<<<<<<<<');
+                    // wrong answer
+                    wrong++;
+                    console.log(digested.data[id]);
+                    digestIt['status'] = -1;
+                    if (responseType === 1) {
+                      //negative marking
+                      if (doc['credit']) {
+                        credit -= doc['credit'] * (1/3);
+                      }
+                    }else{
+                      //ok
+
+                    }
 
                   }
 
-                }
 
-                digestIt['type'] = type;
-                digestIt['answer'] = ans;
-                digestIt['credit'] = doc['credit'];
-                qcount++;
+                  digestIt['type'] = type;
+                  digestIt['answer'] = ans;
+                  digestIt['credit'] = doc['credit'];
+                  qcount++;
+
+
+                }else{//end if digestIt
+                  //error 
+                }
               }
             })//end each
+
             ret = {
               arr : digested.data,
               nonAttempt: nonAttempt,
@@ -164,16 +179,20 @@ router.post('/upload', function(req, res, next) {
                 console.log('unlinking done');
               }
             })
-
+            // console.log(ret.arr);
             res.json(ret);
 
           });//end Answer find
 
+      
+          // fs.writeFile('./data/data1.json', JSON.stringify(digested.data),'utf-8', function(err){
 
+          // })
 
-          });
+          });//digest
         }else{
           if (err) {
+            console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
             res.send({err:1, msg: err});
             res.end();
           }
@@ -186,34 +205,34 @@ router.post('/upload', function(req, res, next) {
     req.pipe(busboy);
 });
 
-router.put('/save-answer', function(req, res, next) {
-  var data = req.body;
-  console.log(data);
-  var answer = new Answer({
-    id: data.id,
-    answer: data.answer,
-    type:data.type,
-    stream:data.stream,
-    qSet:data.qSet,
-    credit: data.credit
-  })
-  answer.save(function(err, data){
-        if (!err) {
-            var resdata = {
-                "done": true
-            }
-            var dataToSend = JSON.stringify(resdata);
-            res.send(dataToSend);
-        }else{
-            var resdata = {
-                "done": false,
-                "error_msg": err
-            }
-            var dataToSend = JSON.stringify(resdata);
-            res.send(dataToSend);
-        }
-    })
-});
+// router.put('/save-answer', function(req, res, next) {
+//   var data = req.body;
+//   console.log(data);
+//   var answer = new Answer({
+//     id: data.id,
+//     answer: data.answer,
+//     type:data.type,
+//     stream:data.stream,
+//     qSet:data.qSet,
+//     credit: data.credit
+//   })
+//   answer.save(function(err, data){
+//         if (!err) {
+//             var resdata = {
+//                 "done": true
+//             }
+//             var dataToSend = JSON.stringify(resdata);
+//             res.send(dataToSend);
+//         }else{
+//             var resdata = {
+//                 "done": false,
+//                 "error_msg": err
+//             }
+//             var dataToSend = JSON.stringify(resdata);
+//             res.send(dataToSend);
+//         }
+//     })
+// });
 
 
 /**

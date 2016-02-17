@@ -16,8 +16,11 @@ jQuery(document).ready(function($) {
         testDate = $('.test-date span'),
         subject = $('.subject span')
         h4 = $('h4');
-        h4.hide();
-        
+        h4.hide(),
+        list = $('.dropdown ul li')
+        caret = $('.caret')
+        dropdownToggle = $('.dropdown-toggle');
+            
 
     submit.click(function(event) {
         event.preventDefault();
@@ -75,6 +78,7 @@ jQuery(document).ready(function($) {
                 return xhr;
             },
             success: function ( data ) {
+                da = data;
                 if (!data.err) {
                     formContainer.addClass('hide');
                     formContainer.animate({
@@ -101,8 +105,10 @@ jQuery(document).ready(function($) {
 
 
                         //attatch data to dom
+                        var count = 1;
                         $.each(data.arr, function(index, el) {
-                            answer.append(creatQuestion(el, index));
+                            answer.append(creatQuestion(el, index, count));
+                            count++;
                         });        
                         //set the jumbo data
                         $(attempted[0]).text(data['qcount'] - data['nonAttempt']);
@@ -132,10 +138,17 @@ jQuery(document).ready(function($) {
 
     });//end click
 
+    // $.each(list, function(index, el) {
+    //     $(el).click(function(event) {
+    //         caret.data('select', $(el).data('stream'));
+    //         // dropdownToggle.text($(el + 'a').text());
+    //         console.log($(el + 'a').text());
+    //     });
+    // });
 
 });                 
 
-function creatQuestion(obj, id){
+function creatQuestion(obj, id, qno){
     var str = '';
     str = '<div class="col-6-md question">';
     if ((parseInt(id.toString().slice(-2)) > 90) || (id.toString().slice(-2) == '00')) {
@@ -143,14 +156,23 @@ function creatQuestion(obj, id){
     }else{
         str+=       '<img class="question-img" name="585_664592_0_587434_cs2_q'+id.toString().slice(-2)+'.jpg" src="https://www.digialm.com:443//per/g01/pub/585/touchstone/TempQPImagesStoreNonSecured/adcimages/1454917673108/6645927///585_664592_0_587434_cs2_q'+ id.toString().slice(-2) +'.jpg" alt="">';
     }
+    str+=       '<div class="qno">'+  qno + '<div class="credit2">Marks '+  obj['credit'] + '</div></div>';
     str+=        '<div class="wrapper">';
     str+=            '<ul>';
-    str+=               ' <li>QID : <strong>' + id +'</strong> </li>';
-    str+=               '<li class="correct">Correct answer : <strong>'+ obj['answer'] +'</strong></li>';
+    str+=               ' <li class="qid">QID : <strong>' + id +'</strong> </li>';
+    str+=               '<li class="correct">Actual answer : <strong>'+ obj['answer'] +'</strong></li>';
     if (obj['type'] === '1') {
-        str+=           '<li>Your answer (Selected) : '+ obj['ChosenOption']+'</li>';
+        str+=           '<li class="gans">Your answer (Selected) : '+ obj['ChosenOption']+'</li>';
     }else if (obj['type'] === '2') {
-        str+=           '<li>Your answer (Given) : '+ obj['GivenAnswer'] +'</li>';
+        str+=           '<li class="gans">Your answer (Given) : '+ obj['GivenAnswer'] +'</li>';
+    }
+    //show if right or wrong
+    if (obj['status'] === 0) {
+        str+=           '<li class="status skip"><span class="glyphicon glyphicon-minus" aria-hidden="true"></li>';
+    }else if (obj['status'] === 1) {
+        str+=           '<li class="status ok"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></li>';
+    }else if (obj['status'] === -1) {
+        str+=           '<li class="status ohh"><span class="glyphicon glyphicon-remove" aria-hidden="true"></li>';
     }
     str+=            '</ul>';
     str+=        '</div>';

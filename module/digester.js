@@ -29,6 +29,10 @@ fs.readFile(filePath, 'utf-8', function(err ,data){
                        var val = text.slice(indexOfDivider+1,text.length).replace(/\s/g, '');
                        item[key] = val;
 
+                       if (id == 664592445) {
+                          console.log('-----------------------');
+                       }
+
                        if (index2 ===1) {
                         digest.push(item);
                        }else if (index2 ===0) {

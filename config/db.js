@@ -8,6 +8,7 @@ module.exports = {
     options : {}
 }
 
+    // database : 'test_1',
 
 // {
 //     host : 'localhost',

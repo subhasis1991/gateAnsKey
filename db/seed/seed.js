@@ -1,5 +1,5 @@
 var request = require('request');
-var data = require('./../../data/data.json');
+var data = require('./../../data/data1.json');
 var Answer = require('../Answer');
 var _ = require('underscore');
 
