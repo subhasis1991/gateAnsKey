@@ -26,7 +26,7 @@ var _saveQFile = function saveFileToAntPath(filePath, data, cb){
 var _unlink = function unlinkFile(filePath, res, cb){
   fs.unlink(filePath, function(err){
     if (!err) {
-      if (!_.isFunction(cb)) {
+      if (cb && !_.isFunction(cb)) {
         cb();
       }
     }else{

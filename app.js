@@ -11,6 +11,7 @@ var config = require('./config/config');
 //registering Schema s
 require('./db/Answer');
 require('./db/AnsSet');
+require('./db/User');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');

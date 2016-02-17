@@ -35,6 +35,7 @@ var tempFileName = util.randStr(20);
               res.setHeader('errcode', ERR.TEMP_FILE_SAVE_ERR);
 
               util.log('ERROR :' + ERR.TEMP_FILE_SAVE_ERR);
+              util.unlink(tempFilePath);
             }//else saved
           })
       });//end on data
@@ -48,6 +49,7 @@ var tempFileName = util.randStr(20);
       res.setHeader('errcode', ERR.WRONG_FILE_TYPE_UPLOADED_ERR);
 
       util.log('ERROR :' + ERR.WRONG_FILE_TYPE_UPLOADED_ERR);
+      util.unlink(tempFilePath);
     }//end if file type check
 
   });//END busboy on file
@@ -87,6 +89,7 @@ var tempFileName = util.randStr(20);
             res.setHeader('errcode',  ERR.TEMP_FILE_DIGESTION_ERR);
 
             util.log('ERROR :' + ERR.TEMP_FILE_DIGESTION_ERR);
+            util.unlink(tempFilePath);
           }
 
 
@@ -99,11 +102,13 @@ var tempFileName = util.randStr(20);
           res.setHeader('errcode', ERR.TEMP_FILE_STAT_ERR);
 
           util.log('ERROR :' + ERR.TEMP_FILE_STAT_ERR);
+          util.unlink(tempFilePath);
         }else if (!stats.isFile()) {
           res.setHeader('err', 1);
           res.setHeader('errcode', ERR.TEMP_FILE_PATH_NOT_FOUND_ERR);
 
           util.log('ERROR :' + ERR.TEMP_FILE_PATH_NOT_FOUND_ERR);
+          util.unlink(tempFilePath);
         }
       }
 

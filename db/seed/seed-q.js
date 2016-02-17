@@ -78,7 +78,7 @@ _.each(saveData,function(dat, index) {
 
 });
 
-require('./seed-qset')(mongoConnect);
+// require('./seed-qset')(mongoConnect);
 
 
 

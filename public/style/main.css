@@ -97,6 +97,10 @@ input[type="file"]{
 }
 .name span{
   font-size: 55px;
+  letter-spacing: 1px;
+}
+.subject span{
+  font-size: 20px;
 }
 .rollno span{
   font-size:45px;
@@ -196,7 +200,7 @@ input[type="file"]{
   opacity: 1;
   cursor: pointer;
   border:1px solid #5FCF80;
-  -webkit-transition: all .75s linear;
+  -webkit-transition: all .55s linear;
   z-index: 5;
 }
 
@@ -204,7 +208,7 @@ input[type="file"]{
   background-color: #5FCF80;
   opacity: 1;
   color: white;
-  -webkit-transition: all 1s linear;
+  -webkit-transition: all .75s linear;
 }
 
 .credit2{
@@ -224,14 +228,14 @@ input[type="file"]{
   cursor: pointer;
   z-index: 5;
   border:1px solid #DB4886;
-  -webkit-transition: all .75s linear;
+  -webkit-transition: all .55s linear;
 }
 
 .credit2:hover{
   background-color: #DB4886;
   opacity: 1;
   color: white;
-  -webkit-transition: all 1s linear;
+  -webkit-transition: all .75s linear;
 }
 
 .question{

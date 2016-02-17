@@ -1,5 +1,5 @@
 module.exports = {
-    stream: 'cs',
+    stream: 'ce',
     qsetno: 2,
     doseed: 0
 }

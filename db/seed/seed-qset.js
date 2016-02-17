@@ -10,16 +10,15 @@ var Answer = mongoose.model('Answer');
 
 
 var _ = require('underscore');
-// var mongoConnect = require('../../config/connection-dev');
+var mongoConnect = require('../../config/connection-dev');
 
 
 
 
 
 
-module.exports = function (mongoConnect){
+// module.exports = function (mongoConnect){
 
-    var ansSet = new AnsSet(queryObj);
 
     // console.log(mongoConnect);
     var queryObj = {
@@ -27,6 +26,7 @@ module.exports = function (mongoConnect){
         qsetno: config.qsetno
     }
 
+    var ansSet = new AnsSet(queryObj);
 
     ansSet.findByStreamQset(function(err, data){
         if (!err && (data.length === 0)) {
@@ -57,5 +57,7 @@ module.exports = function (mongoConnect){
         }
     
     })//end ansSet findByStreamQset
-}
+
+
+// }
 
