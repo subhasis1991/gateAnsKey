@@ -8,8 +8,9 @@ var bodyParser = require('body-parser');
 // var upload = multer({ dest: 'uploads/' })
 var config = require('./config/config');
 
-
-var Answer = require('./db/Answer');
+//registering Schema s
+require('./db/Answer');
+require('./db/AnsSet');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -20,6 +21,9 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.set('base', path.resolve('./'));
+console.log(app.get('base'));
+
 
 //connect mongodb
 if (config.ENV == "DEV") {

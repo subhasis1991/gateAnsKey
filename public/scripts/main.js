@@ -25,6 +25,7 @@ jQuery(document).ready(function($) {
     submit.click(function(event) {
         event.preventDefault();
         var fileData = $( 'input[type=file' )[0].files[0];
+        
         console.log(fileData);
         // var stream = $( 'input[type=file' )[0].files[0]
 
@@ -77,9 +78,11 @@ jQuery(document).ready(function($) {
 
                 return xhr;
             },
-            success: function ( data ) {
+            success: function ( data, status, xhr) {
                 da = data;
-                if (!data.err) {
+                var resStat = xhr.getResponseHeader("err");
+
+                if (!data.err && !resStat) {
                     formContainer.addClass('hide');
                     formContainer.animate({
                         opacity: 0,
@@ -95,17 +98,17 @@ jQuery(document).ready(function($) {
 
 
                         //extract user
-                        var user = $(data.userInfo);
-                        var userData = User(user);
+                        var userData = data.userInfo;
 
                         userName.text(userData['name']);
                         rollno.text(userData['rollno']);
-                        testDate.text(userData['date']);
+                        testDate.text(userData['examdate']);
                         subject.text(userData['subject']);
 
 
                         //attatch data to dom
-                        var count = 1;
+                        var count = 1,
+                            totalMarks = 0;
                         $.each(data.arr, function(index, el) {
                             answer.append(creatQuestion(el, index, count));
                             count++;
@@ -114,7 +117,9 @@ jQuery(document).ready(function($) {
                         $(attempted[0]).text(data['qcount'] - data['nonAttempt']);
                         $(attempted[2]).text(data['qcount']);
                         right.text(data['right']);
-                        total.text(data['credit']);
+
+                        totalMarks = Math.round( data['credit'] * 100 ) / 100;
+                        total.text(totalMarks);
                         wrong.text(data['wrong']);
                         container.fadeIn('slow', function() {
                             
@@ -124,7 +129,10 @@ jQuery(document).ready(function($) {
                     console.error(data.err, data.errCode);
                     loading.addClass('hide');
                     //show error msg to user
-                    alert('Please select proper file');
+                    // alert('Please select proper file');
+                    if (resStat) {
+                        console.log(xhr.getResponseHeader('errcode'));
+                    }
                 }
 
                     
@@ -151,47 +159,43 @@ jQuery(document).ready(function($) {
 function creatQuestion(obj, id, qno){
     var str = '';
     str = '<div class="col-6-md question">';
+
+
     if ((parseInt(id.toString().slice(-2)) > 90) || (id.toString().slice(-2) == '00')) {
         str+=       '<img class="question-img" name="585_664592_0_587434_cs2_q'+id.toString().slice(-2)+'.jpg" src="https://www.digialm.com:443//per/g01/pub/585/touchstone/TempQPImagesStoreNonSecured/adcimages/1454917673108/6645927///585_664592_0_587434_ga6_q0'+ id.toString().slice(-1) +'.jpg" alt="">';
     }else{
         str+=       '<img class="question-img" name="585_664592_0_587434_cs2_q'+id.toString().slice(-2)+'.jpg" src="https://www.digialm.com:443//per/g01/pub/585/touchstone/TempQPImagesStoreNonSecured/adcimages/1454917673108/6645927///585_664592_0_587434_cs2_q'+ id.toString().slice(-2) +'.jpg" alt="">';
     }
-    str+=       '<div class="qno">'+  qno + '<div class="credit2">Marks '+  obj['credit'] + '</div></div>';
+
+
+    str+=       '<div class="qno">'+  qno + '<div class="credit'+ ((obj['credit']===1)? 1:2)  + '">Marks '+  obj['credit'] + '</div></div>';
     str+=        '<div class="wrapper">';
     str+=            '<ul>';
-    str+=               ' <li class="qid">QID : <strong>' + id +'</strong> </li>';
-    str+=               '<li class="correct">Actual answer : <strong>'+ obj['answer'] +'</strong></li>';
-    if (obj['type'] === '1') {
-        str+=           '<li class="gans">Your answer (Selected) : '+ obj['ChosenOption']+'</li>';
-    }else if (obj['type'] === '2') {
-        str+=           '<li class="gans">Your answer (Given) : '+ obj['GivenAnswer'] +'</li>';
-    }
-    //show if right or wrong
-    if (obj['status'] === 0) {
-        str+=           '<li class="status skip"><span class="glyphicon glyphicon-minus" aria-hidden="true"></li>';
-    }else if (obj['status'] === 1) {
-        str+=           '<li class="status ok"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></li>';
-    }else if (obj['status'] === -1) {
-        str+=           '<li class="status ohh"><span class="glyphicon glyphicon-remove" aria-hidden="true"></li>';
-    }
+    
+        str+=               ' <li class="qid">QID : <strong>' + id +'</strong> </li>';
+        str+=               '<li class="correct">Actual answer : <strong>'+ obj['answer'] +'</strong></li>';
+
+
+        if (obj['type'] === 1) {
+            str+=           '<li class="gans">Your answer (Selected) : '+ obj['ChosenOption']+'</li>';
+        }else if (obj['type'] === 2) {
+            str+=           '<li class="gans">Your answer (Given) : '+ obj['GivenAnswer'] +'</li>';
+        }
+
+        //show if right or wrong
+        if (obj['status'] === 0) {
+            str+=           '<li class="status skip"><span class="glyphicon glyphicon-minus" aria-hidden="true"></li>';
+        }else if (obj['status'] === 1) {
+            str+=           '<li class="status ok"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></li>';
+        }else if (obj['status'] === -1) {
+            str+=           '<li class="status ohh"><span class="glyphicon glyphicon-remove" aria-hidden="true"></li>';
+        }
+
     str+=            '</ul>';
     str+=        '</div>';
+
+
     str+=    '</div>';
 
     return $(str);
-}
-
-function User(user){
-    var nameData = user[0];
-    var dateData = user[4];
-    var rollData = user[2];
-    var subjectData = user[6];
-    var ret = {};
-
-    ret['name'] = $($(nameData).find('td')[1]).text().trim();
-    ret['date'] = $($(dateData).find('td')[1]).text().trim();
-    ret['rollno'] = $($(rollData).find('td')[1]).text().trim();
-    ret['subject'] = $($(subjectData).find('td')[1]).text().trim();
-
-    return ret;
 }

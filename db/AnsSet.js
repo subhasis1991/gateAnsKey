@@ -1,9 +1,9 @@
 var mongoose = require('mongoose');
 var AnswerSchema = require('./Answer');
 
-var AnsSet = new mongoose.Schema({
+var AnsSetSchema = new mongoose.Schema({
     stream:     { type: String},
-    setno:     { type: Number},
+    qsetno:     { type: Number},
     qcount:     { type: Number},
     answers:    [AnswerSchema],
 
@@ -11,4 +11,15 @@ var AnsSet = new mongoose.Schema({
     modifiedOn:  { type: Date, default: Date.now }
 });
 
-mongoose.model('AnsSet', AnsSet);
+
+// AnsSetSchema.methods.findAnsSetForStream = function findAnsSetForStream (cb) {
+//   return this.model('AnsSet').find({stream:'cse', qSet: 1}, cb);
+// };
+
+AnsSetSchema.methods.findByStreamQset = function findById (cb) {
+  return this.model('AnsSet').find({stream: this.stream, qsetno: this.qsetno}, cb);
+};
+
+
+mongoose.model('AnsSet', AnsSetSchema);
+

@@ -179,6 +179,7 @@ input[type="file"]{
 //use color for 1 marks and 2 marks questions
   // background: 
 }
+
 .credit1{
   position: absolute;
   text-align: center;
@@ -194,13 +195,13 @@ input[type="file"]{
   box-shadow: 0px 1px 0px rgba(100, 100, 100, .1); 
   opacity: 1;
   cursor: pointer;
-  z-index: 5;
-  border:1px solid #3A589B;
+  border:1px solid #5FCF80;
   -webkit-transition: all .75s linear;
+  z-index: 5;
 }
 
 .credit1:hover{
-  background-color: #3A589B;
+  background-color: #5FCF80;
   opacity: 1;
   color: white;
   -webkit-transition: all 1s linear;
@@ -221,13 +222,13 @@ input[type="file"]{
   box-shadow: 0px 1px 0px rgba(100, 100, 100, .1); 
   opacity: 1;
   cursor: pointer;
-  border:1px solid #5FCF80;
-  -webkit-transition: all .75s linear;
   z-index: 5;
+  border:1px solid #DB4886;
+  -webkit-transition: all .75s linear;
 }
 
 .credit2:hover{
-  background-color: #5FCF80;
+  background-color: #DB4886;
   opacity: 1;
   color: white;
   -webkit-transition: all 1s linear;
