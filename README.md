@@ -1,3 +1,3 @@
 # gateAnsKey 
 
-for gate marks evaluation
+For gate marks evaluation
