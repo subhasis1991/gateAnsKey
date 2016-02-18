@@ -1,3 +1,12 @@
+.gresponse{
+  width: 100%;
+}
+
+.gresponse img{
+  width: 100%;
+}
+
+
 .alert{
   border: 1px solid #e3e3e3;
   margin-top: 35px;

@@ -2,7 +2,7 @@
 module.exports = {
     host : 'localhost',
     port : 27017,
-    database : 'gateAnswer',
+    database : 'gateAnswerLocal',
     username : '',
     password : '',
     options : {}

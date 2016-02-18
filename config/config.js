@@ -1,5 +1,5 @@
 module.exports = {
-    // ENV: 'PRODUCTION'
+    // ENV: 'PRODUCTION'    
      
      ENV: 'DEV'
     , port: 3000

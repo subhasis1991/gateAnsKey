@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 // var multer  = require('multer');
 // var upload = multer({ dest: 'uploads/' })
 var config = require('./config/config');
+var cors = require('cors');
 
 //registering Schema s
 require('./db/Answer');
@@ -16,6 +17,7 @@ require('./db/User');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var file = require('./routes/file');
+var seed = require('./routes/seed');
 
 var app = express();
 
@@ -42,10 +44,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+//for CORS seeding
+app.use(cors());
 
 app.use('/', routes);
 app.use('/users', users);
 app.use('/file', file);
+app.use('/seed', seed);
 
 
 // catch 404 and forward to error handler

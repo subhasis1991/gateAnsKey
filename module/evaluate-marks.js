@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
     saveUserData = require('./save-user-data');
 
 
-var _eval = function evaluateMarks(digested, params){
+var _eval = function evaluateMarks(digested, req, res, next){
 
   var lenn=0;
   _.each(digested.data,function(){
@@ -16,10 +16,6 @@ var _eval = function evaluateMarks(digested, params){
   })
   
 var ret,
-    res = params.res,
-    req = params.req,
-    next = params.next,
-    tempFilePath = params.tempFilePath,
     userInfo = digested.userInfo,
     allRes = digested.data,
     nonAttempt = 0,
@@ -30,6 +26,8 @@ var ret,
     negative = 0,
     subject,
     qsetno;
+
+
 
   if (userInfo.subject) {
     var fspace = userInfo.subject.indexOf(' ');
@@ -65,7 +63,7 @@ var ret,
               res.setHeader('errcode', ERR.QUESTION_NOT_FOUND_ERR);
 
               util.log('ERROR :'+ ERR.QUESTION_NOT_FOUND_ERR);
-              util.unlink(tempFilePath);
+              // util.unlink(tempFilePath);
               
             }else{
 
@@ -131,7 +129,7 @@ var ret,
               }
             }
           })//end each
-
+          
           ret = {
             arr : digested.data,
             nonAttempt: nonAttempt,
@@ -148,13 +146,13 @@ var ret,
             res.setHeader('errcode',  ERR.QSET_NOT_AVAILABLE_ERR);
 
             util.log('ERROR :'+ ERR.QSET_NOT_AVAILABLE_ERR);
-            util.unlink(tempFilePath);
+            // util.unlink(tempFilePath);
 
             res.end();
           }
         }
         //delete temp file and send senponse
-        fs.unlink(tempFilePath, function(err){
+        // fs.unlink(tempFilePath, function(err){
           if (!err) {
               
             //check if any error is catched before
@@ -166,7 +164,7 @@ var ret,
               res.setHeader('msg', 'APP_SERVER_ERROR');
 
               util.log('ERROR :' + ERR.APP_SERVER_ERR);
-              util.unlink(tempFilePath, res);
+              // util.unlink(tempFilePath, res);
             }//end if err
 
             /*
@@ -185,19 +183,19 @@ var ret,
           }else{
             if (!res.getHeader('err')) {
               res.setHeader('err', 1);
-              res.setHeader('errcode',  ERR.TEMP_FILE_UNLINK_ERR);
+              // res.setHeader('errcode',  ERR.TEMP_FILE_UNLINK_ERR);
             }
             res.end();
             
-            util.log('ERROR :'+ ERR.TEMP_FILE_UNLINK_ERR);
+            // util.log('ERROR :'+ ERR.TEMP_FILE_UNLINK_ERR);
           }
-        })//end fs.unlink
+        // })//end fs.unlink
       }else{
         res.setHeader('err', 1);
         res.setHeader('errcode',  ERR.DATA_NOT_AVAILABLE_ERR);
         
         util.log('ERROR :'+ ERR.DATA_NOT_AVAILABLE_ERR);
-        util.unlink(tempFilePath, res);
+        // util.unlink(tempFilePath, res);
       }//end AnsSet find err check
     });//end Answer find
 
@@ -208,8 +206,10 @@ var ret,
     res.end();
 
     util.log('ERROR :'+ ERR.QUERY_ERR);
-    util.unlink(tempFilePath);
+    // util.unlink(tempFilePath);
   }
+
+
 
 }//end _eval
 

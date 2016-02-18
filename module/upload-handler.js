@@ -15,108 +15,119 @@ var evaluateMarks = require('./evaluate-marks');
 var config = require('./../db/seed/config');
 
 module.exports = function uploadHandler (req, res, next) {
+  var digested = JSON.parse((req.body.DATA));
 
-var tempFileName = util.randStr(20);
+  // console.log(digested);
 
-  var busboy = new Busboy({ headers: req.headers });
+  if (config.doseed) {
+    util.saveQFile('./data/' + config.stream + config.qsetno + '.json', JSON.stringify(digested.data));
+  }
 
-  //create a temp file name in uploads directory
-  var tempFilePath = path.join(__dirname, '../uploads', './'+ tempFileName + '.html');
 
-  busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-    if (file && (mimetype === 'text/html')) {
+  evaluateMarks.eval(digested, req, res, next);
 
-      file.on('data', function(fileData) {
 
-          //save the uploaded file
-          fs.writeFile(tempFilePath, fileData,'utf-8', function(err){
-            if (err) {
-              res.setHeader('err',1);
-              res.setHeader('errcode', ERR.TEMP_FILE_SAVE_ERR);
+// var tempFileName = util.randStr(20);
 
-              util.log('ERROR :' + ERR.TEMP_FILE_SAVE_ERR);
-              util.unlink(tempFilePath);
-            }//else saved
-          })
-      });//end on data
+//   var busboy = new Busboy({ headers: req.headers });
 
-      file.on('end', function() {
+//   //create a temp file name in uploads directory
+//   var tempFilePath = path.join(__dirname, '../uploads', './'+ tempFileName + '.html');
 
-      });
-    }else{
-      //wrong file type uploaded
-      res.setHeader('err', 1);
-      res.setHeader('errcode', ERR.WRONG_FILE_TYPE_UPLOADED_ERR);
+//   busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+//     if (file && (mimetype === 'text/html')) {
 
-      util.log('ERROR :' + ERR.WRONG_FILE_TYPE_UPLOADED_ERR);
-      util.unlink(tempFilePath);
-    }//end if file type check
+//       file.on('data', function(fileData) {
 
-  });//END busboy on file
+//           //save the uploaded file
+//           fs.writeFile(tempFilePath, fileData,'utf-8', function(err){
+//             if (err) {
+//               res.setHeader('err',1);
+//               res.setHeader('errcode', ERR.TEMP_FILE_SAVE_ERR);
 
-  busboy.on('finish', function() {
+//               util.log('ERROR :' + ERR.TEMP_FILE_SAVE_ERR);
+//               util.unlink(tempFilePath);
+//             }//else saved
+//           })
+//       });//end on data
 
-    fs.stat(tempFilePath, function(err, stats){
+//       file.on('end', function() {
+
+//       });
+//     }else{
+//       //wrong file type uploaded
+//       res.setHeader('err', 1);
+//       res.setHeader('errcode', ERR.WRONG_FILE_TYPE_UPLOADED_ERR);
+
+//       util.log('ERROR :' + ERR.WRONG_FILE_TYPE_UPLOADED_ERR);
+//       util.unlink(tempFilePath);
+//     }//end if file type check
+
+//   });//END busboy on file
+
+//   busboy.on('finish', function() {
+
+//     fs.stat(tempFilePath, function(err, stats){
       
-      if (!err && stats.isFile()) {
+//       if (!err && stats.isFile()) {
 
-        /*
-        |--------------------------------------------------------------------------
-        | DIGEST UPLOADED DATA AND EVALUATE
-        |--------------------------------------------------------------------------
-        */
+        
+//         |--------------------------------------------------------------------------
+//         | DIGEST UPLOADED DATA AND EVALUATE
+//         |--------------------------------------------------------------------------
+        
 
-        //start processing the anser page
-        digester(tempFilePath, function(err, digested){
+//         //start processing the anser page
+//         digester(tempFilePath, function(err, digested){
 
-          //create a quidtion Id file
-          if (config.doseed) {
-            util.saveQFile('./data/' + config.stream + config.qsetno + '.json', JSON.stringify(digested.data));
-          }
+//           //create a quidtion Id file
+//           if (config.doseed) {
+//             util.saveQFile('./data/' + config.stream + config.qsetno + '.json', JSON.stringify(digested.data));
+//           }
           
 
-          if (!err) {
-            //compare and generate result
-            var params = {
-              req: req,
-              res: res,
-              next: next,
-              tempFilePath: tempFilePath
-            };
-            evaluateMarks.eval(digested, params);
-          }else{
-            res.setHeader('err', 1);
-            res.setHeader('errcode',  ERR.TEMP_FILE_DIGESTION_ERR);
+//           if (!err) {
+//             //compare and generate result
+//             var params = {
+//               req: req,
+//               res: res,
+//               next: next,
+//               tempFilePath: tempFilePath
+//             };
+//             evaluateMarks.eval(digested, params);
+//           }else{
+//             res.setHeader('err', 1);
+//             res.setHeader('errcode',  ERR.TEMP_FILE_DIGESTION_ERR);
 
-            util.log('ERROR :' + ERR.TEMP_FILE_DIGESTION_ERR);
-            util.unlink(tempFilePath);
-          }
+//             util.log('ERROR :' + ERR.TEMP_FILE_DIGESTION_ERR);
+//             util.unlink(tempFilePath);
+//           }
 
 
-        });//digest
+//         });//digest
 
-      //some file stat error found
-      }else{
-        if (err) {
-          res.setHeader('err', 1);
-          res.setHeader('errcode', ERR.TEMP_FILE_STAT_ERR);
+//       //some file stat error found
+//       }else{
+//         if (err) {
+//           res.setHeader('err', 1);
+//           res.setHeader('errcode', ERR.TEMP_FILE_STAT_ERR);
 
-          util.log('ERROR :' + ERR.TEMP_FILE_STAT_ERR);
-          util.unlink(tempFilePath);
-        }else if (!stats.isFile()) {
-          res.setHeader('err', 1);
-          res.setHeader('errcode', ERR.TEMP_FILE_PATH_NOT_FOUND_ERR);
+//           util.log('ERROR :' + ERR.TEMP_FILE_STAT_ERR);
+//           util.unlink(tempFilePath);
+//         }else if (!stats.isFile()) {
+//           res.setHeader('err', 1);
+//           res.setHeader('errcode', ERR.TEMP_FILE_PATH_NOT_FOUND_ERR);
 
-          util.log('ERROR :' + ERR.TEMP_FILE_PATH_NOT_FOUND_ERR);
-          util.unlink(tempFilePath);
-        }
-      }
+//           util.log('ERROR :' + ERR.TEMP_FILE_PATH_NOT_FOUND_ERR);
+//           util.unlink(tempFilePath);
+//         }
+//       }
 
-    })//end stat check
+//     })//end stat check
     
-  });//END busboy on finish
+//   });//END busboy on finish
 
-    req.pipe(busboy);
+//     req.pipe(busboy);
 }
 
           

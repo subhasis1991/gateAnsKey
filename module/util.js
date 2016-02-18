@@ -42,6 +42,8 @@ var _unlink = function unlinkFile(filePath, res, cb){
 var _log = function log(data){
   if (gconfig.ENV === 'DEV') {
     console.log(data);
+  }else if (gconfig.ENV === 'PRODUCTION') {
+    
   }
 }
         

@@ -11,7 +11,9 @@ module.exports = {
     QUESTION_NOT_FOUND_ERR: 8,
     DATA_NOT_AVAILABLE_ERR: 9,
     USER_SEARCH_ERR: 10,
-    QSET_NOT_AVAILABLE_ERR: 11
+    QSET_NOT_AVAILABLE_ERR: 11,
+    NOT_FOUND: 12,
+    NOT_IN_DB_ERR: 13
 }
 
 var errMsg = {

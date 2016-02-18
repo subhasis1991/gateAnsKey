@@ -1,4 +1,4 @@
-var fileName = 'ce2';
+var fileName = 'cs2';
 
 var anskey = require('./' + fileName + '.json'),
     _ = require('underscore'),
