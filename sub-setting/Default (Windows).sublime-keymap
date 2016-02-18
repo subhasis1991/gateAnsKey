@@ -1,0 +1,26 @@
+[
+    { "keys": ["alt+z"], "command": "toggle_side_bar" },
+    { "keys": ["alt+x"], "command": "close"} ,
+    { "keys": ["alt+shift+x"], "command": "close_file" },
+    { "keys": ["ctrl+left"], "command": "next_view_in_stack" },
+    { "keys": ["ctrl+right"], "command": "prev_view_in_stack" },
+    //{ "keys": ["alt+c"], "command": "advanced_new_file"},
+    { "keys": ["alt+a"], "command": "new_file" },
+    { "keys": ["alt+/"], "command": "show_panel", "args": {"panel": "find", "reverse": false} },
+    { "keys": ["alt+w"], "command": "show_overlay", "args": {"overlay": "command_palette"} },
+    //{ "keys": ["alt+q"], "command": "quick_create_file" },
+    //{ "keys": ["alt+d"], "command": "quick_create_directory" },
+    { "keys": ["alt+up"], "command": "select_lines", "args": {"forward": false} },
+    { "keys": ["alt+down"], "command": "select_lines", "args": {"forward": true} },
+    { "keys": ["alt+e"], "command": "show_overlay", "args": {"overlay": "goto", "show_files": true} },
+    { "keys": ["j","j"], "command": "_enter_normal_mode", "args": {"mode": "mode_insert"}, "context": [{"key": "vi_insert_mode_aware"}] },
+    {"keys": ["alt+r"], "command": "browser_refresh", "args": {
+                "auto_save": true,
+                "delay": 0.0,
+                "activate": true,
+                "browsers" : ["chrome"]
+            }
+    },
+    
+]
+

@@ -1,0 +1,22 @@
+<snippet>
+    <content><![CDATA[
+${1:homeModule}.filter('${2:titleCase}', function() {
+    //create a function for processing input
+    var ${3:titleCaseFilter} = function(input) {
+    var words = input.split(' ');
+    for (var i = 0; i < words.length; i++) {
+      words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+    }
+    return words.join(' ');
+    };
+    //return the filtered data
+    return ${3:titleCaseFilter};
+});
+]]></content>
+    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+    <tabTrigger>ag-filter</tabTrigger>
+    <!-- Optional: Set a scope to limit where the snippet will trigger -->
+    <!-- <scope>source.python</scope> -->
+</snippet>
+
+

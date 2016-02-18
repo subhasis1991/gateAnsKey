@@ -1,0 +1,12 @@
+<snippet>
+    <content><![CDATA[
+from django.shortcuts import render
+# View for index page. 
+def page(request):
+  return render(request, '${1:path to file}')
+]]></content>
+    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+    <tabTrigger>render-page</tabTrigger>
+    <!-- Optional: Set a scope to limit where the snippet will trigger -->
+    <!-- <scope>source.python</scope> -->
+</snippet>

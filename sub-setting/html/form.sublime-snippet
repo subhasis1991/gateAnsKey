@@ -1,0 +1,12 @@
+<snippet>
+	<content><![CDATA[
+<form action="${1:foo}" method="${2:post}" accept-charset="utf-8">
+	<label for="${3:name}" >${4:Label : }</label>
+	<input type="${5:text}" name="${3:name}" value="" placeholder="${6:type here}">
+</form>
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>form_</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

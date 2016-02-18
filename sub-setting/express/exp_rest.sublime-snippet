@@ -1,0 +1,86 @@
+<snippet>
+    <content><![CDATA[
+var express = require('express');
+var router = express.Router();
+
+/*
+|--------------------------------------------------------------------------
+| Routers as per REST API
+|--------------------------------------------------------------------------
+| get=> /new, post=> , get=> /:id, get=>/:id/edit, put=> /:id, delete=> /:id
+| get=> /
+|
+| express also supports 
+| download=> , send=> , render=> , json=> , sendfile=> , 
+| 
+| express also supports format negotiation via .format()
+*/
+
+/**
+* @return new create page
+*/
+router.get('/new', function(req, res, next) {
+  console.log('new ${1:video} create page');
+  res.send('new ${1:video} create page');
+});
+
+/**
+* @param req -> {}
+* @return create status
+*/
+router.post('/', function(req, res, next) {
+  console.log('creating new ${1:video}');
+  res.send('creating new ${1:video}');
+});
+
+/**
+* @param :id
+* @return page specific to :id
+*/
+router.get('/:id', function(req, res, next) {
+  console.log('received ${1:video} id for get => ' + req.params.id);
+  res.send('received ${1:video} id for get => ' + req.params.id);
+});
+
+/**
+* @param :id
+* @return :id specific edit page
+*/
+router.get('/:id/edit', function(req, res, next) {
+  console.log('received ${1:video} id for edit => ' + req.params.id);
+  res.send('received ${1:video} id for edit => ' + req.params.id);
+});
+
+/**
+* @param data specific to :id
+* @return update status
+*/
+router.put('/:id', function(req, res, next) {
+  console.log('received ${1:video} id for put => ' + req.params.id);
+  res.send('received ${1:video} id for put => ' + req.params.id);
+});
+
+/**
+* @param :id
+* @return delete status
+*/
+router.delete('/:id', function(req, res, next) {
+  console.log('received ${1:video} id for delete => ' + req.params.id);
+  res.send('received ${1:video} id for delete => ' + req.params.id);
+});
+
+/**
+* @return index page 
+*/
+router.get('/', function(req, res, next) {
+  res.send('${1:video} index');
+});
+
+module.exports = router;
+
+]]></content>
+    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+    <tabTrigger>ex_rest</tabTrigger>
+    <!-- Optional: Set a scope to limit where the snippet will trigger -->
+    <!-- <scope>source.python</scope> -->
+</snippet>

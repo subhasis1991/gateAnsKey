@@ -1,0 +1,19 @@
+<snippet>
+    <content><![CDATA[
+add_action('${1:hook_name}', '${2:hook_functiona});
+
+function ${2:hook_functiona}(){
+    ${3://code....}
+}
+
+add_action('${4:hook_name}', '${5:hook_functiona});
+
+function ${5:hook_functiona}(){
+    ${6://code....}
+}
+]]></content>
+    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+    <tabTrigger>wp-add_action_css</tabTrigger>
+    <!-- Optional: Set a scope to limit where the snippet will trigger -->
+    <!-- <scope>source.python</scope> -->
+</snippet>

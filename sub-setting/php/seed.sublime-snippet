@@ -1,0 +1,23 @@
+<snippet>
+	<content><![CDATA[
+<?php
+
+class ${1:TABLENAME}TableSeeder extends Seeder {
+
+	public function run()
+	{
+		\$${1:TABLENAME}=[
+			${2:}
+		];
+
+		DB::table('${1:TABLENAME}')->insert(\$${1:TABLENAME});
+
+	}
+}
+?>
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>seeder</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

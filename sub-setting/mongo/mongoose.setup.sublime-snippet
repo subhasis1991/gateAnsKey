@@ -1,0 +1,26 @@
+<snippet>
+    <content><![CDATA[
+mongoose.connect('mongodb://localhost:27017/Users');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+
+ db.once('open', function() {
+//     //Injecting data to model instance
+     var newUser = new User({"name":"subhasis"});
+
+    var data = newUser.save(function(err){
+        if (!err) {
+            console.log('done');
+        };
+        mongoose.connection.close(function () {
+            console.log('Mongoose default connection closed');
+        });
+    });
+    res.send(newUser);
+ });
+]]></content>
+    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+    <tabTrigger>mgoose</tabTrigger>
+    <!-- Optional: Set a scope to limit where the snippet will trigger -->
+    <!-- <scope>source.python</scope> -->
+</snippet>

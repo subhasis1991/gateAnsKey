@@ -1,0 +1,15 @@
+<snippet>
+    <content><![CDATA[
+/**
+* @param :id
+* @return :id specific edit page
+*/
+router.get('/:id/edit', function(req, res, next) {
+  res.send('received id for edit => ' + req.params.id);
+});
+]]></content>
+    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+    <tabTrigger>ex_rest_edit</tabTrigger>
+    <!-- Optional: Set a scope to limit where the snippet will trigger -->
+    <!-- <scope>source.python</scope> -->
+</snippet>

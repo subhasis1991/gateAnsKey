@@ -1,0 +1,46 @@
+<snippet>
+	<content><![CDATA[
+module.exports = function(grunt) {
+
+    // 1. All configuration goes here
+    grunt.initConfig({
+        //pkg: grunt.file.readJSON('package.json'),
+
+        // Task settings here
+        watch: {
+            configFiles: {
+            files:  ['app/views/*.php',
+                     'app/routes.php',
+                     'app/controllers/*.php',   
+                     'app/models/*.php',   
+                     'app/database/*/*.php'   
+                    ],
+                options: {
+                    livereload: true
+                }
+            },
+            reloadWatch:{
+                files:'Gruntfile.js',
+                options:{
+                    reload:true
+                }
+            }
+    }
+
+    });
+
+    // 3. Where we tell Grunt we plan to use this plug-in.
+    grunt.loadNpmTasks('grunt-contrib-watch');
+
+
+
+    // 4. Where we tell Grunt what to do when we type "grunt" into the terminal.
+    grunt.registerTask('default', ['watch']);
+
+};
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>g_init</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

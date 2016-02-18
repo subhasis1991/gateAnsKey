@@ -1,0 +1,15 @@
+<snippet>
+    <content><![CDATA[
+/**
+* @param data specific to :id
+* @return update status
+*/
+router.put('/:id', function(req, res, next) {
+  res.send('received id for put => ' + req.params.id);
+});
+]]></content>
+    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+    <tabTrigger>ex_rest_put</tabTrigger>
+    <!-- Optional: Set a scope to limit where the snippet will trigger -->
+    <!-- <scope>source.python</scope> -->
+</snippet>

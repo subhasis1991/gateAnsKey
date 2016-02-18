@@ -1,0 +1,19 @@
+<snippet>
+    <content><![CDATA[
+/**
+ * Short Description
+ *
+ * Long Description
+ *
+ * @package WordPress
+ * @since version
+ *
+ * @param    type    $varname    Description
+ * @return   type                Description
+ */
+]]></content>
+    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+    <tabTrigger>com-php</tabTrigger>
+    <!-- Optional: Set a scope to limit where the snippet will trigger -->
+    <!-- <scope>source.python</scope> -->
+</snippet>

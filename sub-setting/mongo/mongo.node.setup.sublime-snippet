@@ -1,0 +1,21 @@
+<snippet>
+	<content><![CDATA[
+var MongoClient = require('mongodb').MongoClient,
+    Server = require('mongodb').Server;
+
+var mongoClient = new MongoClient(new Server('localhost', 27017), {native_parser: true},{safe: true});
+mongoClient.open(function(err, mongoClient) {
+var db1 = mongoClient.db("chatDB");
+
+db1.collection('chat').insert(data,function(error,success){
+    console.log(error);
+});
+
+mongoClient.close();
+
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>mongo.setup</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

@@ -1,0 +1,10 @@
+<snippet>
+	<content><![CDATA[
+<label for="${1:name}" >${2:Label : }</label>
+<input type="${3:text}" name="${1:name}" value="" placeholder="${4:type here}">
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>label_input</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

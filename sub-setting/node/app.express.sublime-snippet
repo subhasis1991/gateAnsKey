@@ -1,0 +1,19 @@
+<snippet>
+    <content><![CDATA[
+var express     = require('express');
+var app = express();
+
+app.configure(function(){
+    var maxage = 1209600;
+    app.set('views', __dirname + '/views');
+    app.set('view engine', 'jade');
+    app.use(express.static(__dirname + '/public', { maxAge : maxage }));
+});
+
+]]>
+    </content>
+    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+    <tabTrigger>app</tabTrigger>
+    <!-- Optional: Set a scope to limit where the snippet will trigger -->
+    <scope>source.js</scope>
+</snippet>

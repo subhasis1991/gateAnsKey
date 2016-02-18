@@ -1,0 +1,19 @@
+<snippet>
+	<content><![CDATA[
+table 
+	tr
+		td
+			label(for="name") Name : 
+		td
+			input(type="text",id="name" placeholder="Type name")
+	tr
+		td
+			label(for="name") Name : 
+		td
+			input(type="text",id="name" placeholder="Type name")
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>table.jade</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.jade</scope>
+</snippet>

@@ -1,0 +1,13 @@
+<snippet>
+    <content><![CDATA[
+add_filter('${1:filter_content}', '${2:filter_functiona});
+
+function ${2:filter_functiona}(){
+    ${3://code....}
+}
+]]></content>
+    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+    <tabTrigger>wp-add_filter</tabTrigger>
+    <!-- Optional: Set a scope to limit where the snippet will trigger -->
+    <!-- <scope>source.python</scope> -->
+</snippet>

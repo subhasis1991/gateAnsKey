@@ -1,0 +1,11 @@
+<snippet>
+	<content><![CDATA[
+function (req,res) {
+	res.end(${1:'could not found it'});
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>frr</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

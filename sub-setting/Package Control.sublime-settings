@@ -1,0 +1,36 @@
+{
+	"bootstrapped": true,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"1337 Color Scheme",
+		"AngularJS",
+		"Backbone.js",
+		"Backbone.Marionette",
+		"Bootstrap 3 Snippets",
+		"BracketHighlighter",
+		"Browser Refresh",
+		"CSS3",
+		"Django",
+		"EJS",
+		"Emmet",
+		"Emmet Css Snippets",
+		"Foundation 5 Snippets",
+		"HTML5",
+		"Ionic Snippets",
+		"JavaScript Completions",
+		"jQuery",
+		"LESS",
+		"LiveStyle",
+		"Nettuts+ Fetch",
+		"Node Completions",
+		"Package Control",
+		"SCSS",
+		"SideBarEnhancements",
+		"Terminal",
+		"Theme - Soda",
+		"Underscorejs snippets"
+	]
+}

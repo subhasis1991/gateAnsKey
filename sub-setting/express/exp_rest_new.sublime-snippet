@@ -1,0 +1,14 @@
+<snippet>
+    <content><![CDATA[
+/**
+* @return new create page
+*/
+router.get('/new', function(req, res, next) {
+  res.send('new create page');
+});
+]]></content>
+    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+    <tabTrigger>ex_rest_new</tabTrigger>
+    <!-- Optional: Set a scope to limit where the snippet will trigger -->
+    <!-- <scope>source.python</scope> -->
+</snippet>
