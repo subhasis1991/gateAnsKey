@@ -3,13 +3,19 @@
 
 <div class="container">
         
-    <% include ./partials/form %>
-    
     <h2 class="loading hidden">Checking your answers..</h2>
+    
+    <% include ./partials/form %>
+
+    <% include ./partials/notice %>
+
+    
 
     <% include ./partials/answers %>
     
+    <% include ./partials/error_notice %>
 
+    
 </div>
 
 <% include ./partials/foot %>

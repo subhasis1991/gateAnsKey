@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
     User = mongoose.model('User'),
+    util = require('./util'),
     ERR = require('./ERR');
 
 
@@ -17,7 +18,7 @@ module.exports = function saveUerData(ret){
         wrong_question: ret.wrong,
         negative_marks: ret.negative,
         attempted: ret.attempted
-      })
+      });
 
       user.findByRollNo(function(err, data){
         if (!err) {

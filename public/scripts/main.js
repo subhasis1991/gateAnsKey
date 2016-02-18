@@ -20,7 +20,39 @@ jQuery(document).ready(function($) {
         list = $('.dropdown ul li')
         caret = $('.caret')
         dropdownToggle = $('.dropdown-toggle');
-            
+        alert = $('.alert');
+        errorAlert = $('.alert.error');
+        
+    // var ERR = {
+    //         APP_SERVER_ERR: 101,
+    //         TEST: 0,
+    //         TEMP_FILE_SAVE_ERR: 1,
+    //         WRONG_FILE_TYPE_UPLOADED_ERR: 2,
+    //         TEMP_FILE_UNLINK_ERR: 3,
+    //         TEMP_FILE_STAT_ERR:4,
+    //         TEMP_FILE_PATH_NOT_FOUND_ERR: 5,
+    //         TEMP_FILE_DIGESTION_ERR: 6,
+    //         QUERY_ERR: 7,
+    //         QUESTION_NOT_FOUND_ERR: 8,
+    //         DATA_NOT_AVAILABLE_ERR: 9,
+    //         USER_SEARCH_ERR: 10,
+    //         QSET_NOT_AVAILABLE_ERR: 11
+    //     };
+    var errMsg = {
+        101: 'APP_SERVER_ERR',
+        0 : 'TEST',
+        1 : 'TEMP_FILE_SAVE_ERR',
+        2 : 'WRONG_FILE_TYPE_UPLOADED_ERR',
+        3 : 'TEMP_FILE_UNLINK_ERR',
+        4 : 'TEMP_FILE_STAT_ERR:',
+        5 : 'TEMP_FILE_PATH_NOT_FOUND_ERR',
+        6 : 'TEMP_FILE_DIGESTION_ERR',
+        7 : 'QUERY_ERR',
+        8 : 'QUESTION_NOT_FOUND_ERR',
+        9 : 'DATA_NOT_AVAILABLE_ERR',
+        10 : 'USER_SEARCH_ERR',
+        11 : 'QSET_NOT_AVAILABLE_ERR'
+    }
 
     submit.click(function(event) {
         event.preventDefault();
@@ -28,6 +60,8 @@ jQuery(document).ready(function($) {
         
         console.log(fileData);
         // var stream = $( 'input[type=file' )[0].files[0]
+
+        alert.addClass('hide');
 
         if (!fileData) {
            h4.fadeIn(1000, function() {
@@ -47,6 +81,7 @@ jQuery(document).ready(function($) {
 
         //verify data
         setTimeout(function(){
+            formContainer.hide();
             loading.removeClass('hidden');
             loading.hide();
             loading.fadeIn('fast')
@@ -84,6 +119,7 @@ jQuery(document).ready(function($) {
 
                 if (!data.err && !resStat) {
                     formContainer.addClass('hide');
+
                     formContainer.animate({
                         opacity: 0,
                         visibility: 'hidden'
@@ -92,6 +128,7 @@ jQuery(document).ready(function($) {
                         // container.addClass('hide');
                         container.hide();
                         formContainer.detach();
+                        alert.detach();
                         jumbotron.removeClass('hide');
                         loading.addClass('hide');
 
@@ -131,7 +168,12 @@ jQuery(document).ready(function($) {
                     //show error msg to user
                     // alert('Please select proper file');
                     if (resStat) {
-                        console.log(xhr.getResponseHeader('errcode'));
+                        var errcode= xhr.getResponseHeader('errcode');
+                        console.log(errcode);
+                        
+                        errorAlert.text(errMsg[errcode]);
+                        errorAlert.removeClass('hide');
+                        loading.addClass('hide');
                     }
                 }
 

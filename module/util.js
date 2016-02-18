@@ -30,15 +30,18 @@ var _unlink = function unlinkFile(filePath, res, cb){
         cb();
       }
     }else{
-      res.setHeader('stat', {err:1, errcode: ERR.TEMP_FILE_UNLINK_ERR});
+      if (!res.getHeader('err')) {
+        res.setHeader(err, 1);
+        res.setHeader('errcode', ERR.TEMP_FILE_UNLINK_ERR);
+      }
     }
   })  
 
 }
 
-var _log = function log(){
+var _log = function log(data){
   if (gconfig.ENV === 'DEV') {
-    console.log.call(console, this.arguments)
+    console.log(data);
   }
 }
         

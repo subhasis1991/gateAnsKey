@@ -37,112 +37,122 @@ var ret,
     qsetno = parseInt(userInfo.subject.slice(fspace-1,fspace));
   }
 
-  console.log('Subject :' + subject);
-  console.log('Question set No: ' + qsetno);
+  util.log('Subject :' + subject);
+  util.log('Question set No: ' + qsetno);
 
   //verify stream and subject compatibility
   if (qsetno && subject && (config.doseed === 0)) {
 
     AnsSet.findOne({stream: subject, qsetno: qsetno}, function(err, doc){
       if (!err) {
-        var answers = doc.answers;
+        if (doc) {
+          var answers = doc.answers;
 
-        _.each(answers, function(doc, index){
-          var id,
-              ans,
-              type,
-              response,
-              responseType,
-              digestIt,
-              id = doc['id'],
-              ans = doc['answer'],
-              type = doc['type'];
+          _.each(answers, function(doc, index){
+            var id,
+                ans,
+                type,
+                response,
+                responseType,
+                digestIt,
+                id = doc['id'],
+                ans = doc['answer'],
+                type = doc['type'];
 
-          if (!id ) {
-            //use seHeader instead for error handling
-            res.setHeader('err', 1);
-            res.setHeader('errcode', ERR.QUESTION_NOT_FOUND_ERR);
+            if (!id ) {
+              //use seHeader instead for error handling
+              res.setHeader('err', 1);
+              res.setHeader('errcode', ERR.QUESTION_NOT_FOUND_ERR);
 
-            util.log('ERROR :'+ ERR.QUESTION_NOT_FOUND_ERR);
-            util.unlink(tempFilePath);
-            
-          }else{
+              util.log('ERROR :'+ ERR.QUESTION_NOT_FOUND_ERR);
+              util.unlink(tempFilePath);
+              
+            }else{
 
-            digestIt = allRes[id];
-            
-            if (digestIt) {
-              //match answer
-              if (digestIt['ChosenOption'] && (digestIt['ChosenOption']!= '--')) {
-                
-                response = digestIt['ChosenOption'];
-                responseType = 1;
-              }else if (digestIt['GivenAnswer'] && (digestIt['GivenAnswer']!= '--')) {
-                
-                response = digestIt['GivenAnswer'];
-                responseType = 2;
-              }else if ((digestIt['GivenAnswer'] === '--') || (digestIt['ChosenOption'] === '--')) {
-                // console.log('++++++++++++++++++++');
-                responseType = 0
-              }else {
-                //err
-                // console.log('~~~~~~~~~~~~~~~~~~~');
-                res.send({err: 1, msg: 'wrong data found'});
-              }
+              digestIt = allRes[id];
+              
+              if (digestIt) {
+                //match answer
+                if (digestIt['ChosenOption'] && (digestIt['ChosenOption']!= '--')) {
+                  
+                  response = digestIt['ChosenOption'];
+                  responseType = 1;
+                }else if (digestIt['GivenAnswer'] && (digestIt['GivenAnswer']!= '--')) {
+                  
+                  response = digestIt['GivenAnswer'];
+                  responseType = 2;
+                }else if ((digestIt['GivenAnswer'] === '--') || (digestIt['ChosenOption'] === '--')) {
+                  // console.log('++++++++++++++++++++');
+                  responseType = 0
+                }else {
+                  //err
+                  // console.log('~~~~~~~~~~~~~~~~~~~');
+                  res.send({err: 1, msg: 'wrong data found'});
+                }
 
-              if(!responseType){
-                // console.log('000000000000000000000');
-                //not attempted
-                nonAttempt++;
-                digestIt['status'] = 0;
-              }else if ((responseType == type) && (response == ans)) {
-                //correct answer
-                digestIt['status'] = 1;
-                right++;
-                credit += doc['credit'];
-                // console.log('>>>>>>>>>>>>>>>>>>>>>');
-              }else{
-                // console.log('<<<<<<<<<<<<<<<<<<<<');
-                // wrong answer
-                wrong++;
-                // console.log(digested.data[id]);
-                digestIt['status'] = -1;
-                if (responseType === 1) {
-                  //negative marking
-      //--------------------------------------------------//
-                  if (doc['credit']) {
-                    negative -= doc['credit'] * (1/3);
-                  }
+                if(!responseType){
+                  // console.log('000000000000000000000');
+                  //not attempted
+                  nonAttempt++;
+                  digestIt['status'] = 0;
+                }else if ((responseType == type) && (response == ans)) {
+                  //correct answer
+                  digestIt['status'] = 1;
+                  right++;
+                  credit += doc['credit'];
+                  // console.log('>>>>>>>>>>>>>>>>>>>>>');
                 }else{
-                  //ok
+                  // console.log('<<<<<<<<<<<<<<<<<<<<');
+                  // wrong answer
+                  wrong++;
+                  // console.log(digested.data[id]);
+                  digestIt['status'] = -1;
+                  if (responseType === 1) {
+                    //negative marking
+        //--------------------------------------------------//
+                    if (doc['credit']) {
+                      negative -= doc['credit'] * (1/3);
+                    }
+                  }else{
+                    //ok
+
+                  }
 
                 }
 
+                digestIt['type'] = type;
+                digestIt['answer'] = ans;
+                digestIt['credit'] = doc['credit'];
+                qcount++;
+
+
+              }else{//end if digestIt
+                //error 
               }
-
-
-              digestIt['type'] = type;
-              digestIt['answer'] = ans;
-              digestIt['credit'] = doc['credit'];
-              qcount++;
-
-
-            }else{//end if digestIt
-              //error 
             }
+          })//end each
+
+          ret = {
+            arr : digested.data,
+            nonAttempt: nonAttempt,
+            credit:(credit + negative),
+            right: right,
+            wrong:wrong,
+            qcount:qcount,
+            negative: negative,
+            userInfo:userInfo 
           }
-        })//end each
+        }else{
+          if (!res.getHeader('err')) {
+            res.setHeader('err', 1);
+            res.setHeader('errcode',  ERR.QSET_NOT_AVAILABLE_ERR);
 
-        ret = {
-          arr : digested.data,
-          nonAttempt: nonAttempt,
-          credit:(credit + negative),
-          right: right,
-          wrong:wrong,
-          qcount:qcount,
-          negative: negative,
-          userInfo:userInfo 
+            util.log('ERROR :'+ ERR.QSET_NOT_AVAILABLE_ERR);
+            util.unlink(tempFilePath);
+
+            res.end();
+          }
         }
-
         //delete temp file and send senponse
         fs.unlink(tempFilePath, function(err){
           if (!err) {
@@ -156,7 +166,7 @@ var ret,
               res.setHeader('msg', 'APP_SERVER_ERROR');
 
               util.log('ERROR :' + ERR.APP_SERVER_ERR);
-              util.unlink(tempFilePath);
+              util.unlink(tempFilePath, res);
             }//end if err
 
             /*
@@ -167,24 +177,27 @@ var ret,
 
               res.json(ret);
 
-              //save user data
-              saveUserData(ret);
+              if (!res.getHeader('err')) {
+                //save user data
+                saveUserData(ret);
+              }
 
           }else{
-            res.setHeader('err', 1);
-            res.setHeader('errcode',  ERR.TEMP_FILE_UNLINK_ERR);
+            if (!res.getHeader('err')) {
+              res.setHeader('err', 1);
+              res.setHeader('errcode',  ERR.TEMP_FILE_UNLINK_ERR);
+            }
             res.end();
             
             util.log('ERROR :'+ ERR.TEMP_FILE_UNLINK_ERR);
           }
         })//end fs.unlink
-
       }else{
         res.setHeader('err', 1);
         res.setHeader('errcode',  ERR.DATA_NOT_AVAILABLE_ERR);
         
         util.log('ERROR :'+ ERR.DATA_NOT_AVAILABLE_ERR);
-        util.unlink(tempFilePath);
+        util.unlink(tempFilePath, res);
       }//end AnsSet find err check
     });//end Answer find
 

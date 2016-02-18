@@ -1,3 +1,9 @@
+.alert{
+  border: 1px solid #e3e3e3;
+  margin-top: 35px;
+  font-size: 25px;
+}
+
 input[type="file"]{
   margin-top: 15px;
   display: block !important;
